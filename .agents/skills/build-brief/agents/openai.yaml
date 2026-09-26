@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Brief"
+  short_description: "Clarify projects or features before building"
+  default_prompt: "Use $build-brief to interview me and produce a clear build brief before implementation."

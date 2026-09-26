@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Spec"
+  short_description: "Create implementation-ready feature specs."
+  default_prompt: "Use $feature-spec to plan the next unimplemented feature."

@@ -1,0 +1,345 @@
+[
+  {
+    "id": "bootstrap-nextjs-app",
+    "area": "plataforma",
+    "title": "La app Next.js arranca y pasa la verificación base",
+    "user_visible_behavior": "Al ejecutar ./init.sh se instalan dependencias, pasan lint, typecheck y un test de ejemplo, y la app sirve una página inicial en local.",
+    "depends_on": [],
+    "status": "not_started",
+    "verification": [
+      "./init.sh termina con código 0 ejecutando instalación, lint, typecheck y tests.",
+      "RUN_START_COMMAND=1 ./init.sh sirve la página inicial en el navegador."
+    ],
+    "evidence": [],
+    "notes": "Stack propuesto en docs/build-brief.md: Next.js + PostgreSQL. Hosting sin decidir; no bloquear el bootstrap por ello. Actualizar init.sh a la variante real."
+  },
+  {
+    "id": "bootstrap-postgres-migrations",
+    "area": "plataforma",
+    "title": "La app conecta con PostgreSQL y aplica migraciones",
+    "user_visible_behavior": "En local se levanta PostgreSQL, se aplican las migraciones desde cero y la app responde a una comprobación de salud que consulta la base de datos.",
+    "depends_on": ["bootstrap-nextjs-app"],
+    "status": "not_started",
+    "verification": [
+      "./init.sh aplica migraciones sobre una base vacía sin errores.",
+      "Un test de integración consulta la base de datos y pasa."
+    ],
+    "evidence": [],
+    "notes": "Las tablas de dominio se crean en las features que las necesitan; aquí solo conexión, herramienta de migraciones y base de test."
+  },
+  {
+    "id": "manager-create-member",
+    "area": "socios",
+    "title": "El gestor da de alta un socio",
+    "user_visible_behavior": "El gestor introduce email, nombre y si tiene cuota activa; el socio aparece en el listado de socios. Un email duplicado se rechaza.",
+    "depends_on": ["bootstrap-postgres-migrations"],
+    "status": "not_started",
+    "verification": [
+      "Test: crear socio válido lo persiste y aparece en el listado.",
+      "Test: crear un socio con email ya existente devuelve error y no duplica."
+    ],
+    "evidence": [],
+    "notes": "Entidad Socio (email, nombre, cuota activa). Hasta que exista auth-manager-route-guard, la pantalla puede no estar protegida; no desplegar sin esa feature."
+  },
+  {
+    "id": "manager-toggle-member-fee",
+    "area": "socios",
+    "title": "El gestor activa o desactiva la cuota de un socio",
+    "user_visible_behavior": "Desde el listado de socios, el gestor cambia el estado de cuota y el cambio se refleja al recargar.",
+    "depends_on": ["manager-create-member"],
+    "status": "not_started",
+    "verification": [
+      "Test: cambiar cuota activa a inactiva y viceversa persiste el valor."
+    ],
+    "evidence": [],
+    "notes": "La cuota inactiva impide reservar (ver booking-requires-active-fee)."
+  },
+  {
+    "id": "auth-request-magic-link",
+    "area": "autenticacion",
+    "title": "Un socio solicita un enlace mágico de acceso",
+    "user_visible_behavior": "El socio introduce su email y ve un mensaje neutro de 'revisa tu correo'; si el email es de un socio dado de alta se envía un enlace de un solo uso con caducidad.",
+    "depends_on": ["manager-create-member"],
+    "status": "not_started",
+    "verification": [
+      "Test: email de socio existente genera token y envía email (capturado en entorno de test).",
+      "Test: email desconocido muestra el mismo mensaje y no envía nada."
+    ],
+    "evidence": [],
+    "notes": "Riesgo abierto: entregabilidad del email. Proveedor de email sin decidir; en local/test usar un transporte que capture los mensajes. No revelar si un email existe."
+  },
+  {
+    "id": "auth-consume-magic-link",
+    "area": "autenticacion",
+    "title": "El socio inicia sesión abriendo el enlace mágico",
+    "user_visible_behavior": "Al abrir un enlace válido el socio queda con sesión iniciada; un enlace caducado o ya usado muestra error y no inicia sesión.",
+    "depends_on": ["auth-request-magic-link"],
+    "status": "not_started",
+    "verification": [
+      "Test: token válido crea sesión y marca el token como usado.",
+      "Test: token reutilizado o caducado se rechaza."
+    ],
+    "evidence": [],
+    "notes": "Sesión segura (cookie httpOnly). Caducidad del enlace a definir en la spec."
+  },
+  {
+    "id": "auth-sign-out",
+    "area": "autenticacion",
+    "title": "El usuario cierra sesión",
+    "user_visible_behavior": "Tras pulsar 'cerrar sesión', las páginas privadas redirigen al formulario de acceso.",
+    "depends_on": ["auth-consume-magic-link"],
+    "status": "not_started",
+    "verification": [
+      "Test: tras cerrar sesión, una petición a una ruta privada redirige al acceso."
+    ],
+    "evidence": [],
+    "notes": ""
+  },
+  {
+    "id": "auth-manager-route-guard",
+    "area": "autenticacion",
+    "title": "Solo el gestor accede a las pantallas de gestión",
+    "user_visible_behavior": "Un usuario con rol gestor ve el área de gestión; un socio o un visitante sin sesión recibe acceso denegado o redirección.",
+    "depends_on": ["auth-consume-magic-link"],
+    "status": "not_started",
+    "verification": [
+      "Test: gestor accede a /gestion (o ruta equivalente).",
+      "Test: socio y visitante anónimo son rechazados en rutas y acciones de servidor de gestión."
+    ],
+    "evidence": [],
+    "notes": "El brief no define cómo inicia sesión el gestor; supuesto a confirmar en la spec: mismo enlace mágico con rol gestor asignado por seed/config. Proteger también las acciones de servidor, no solo la UI."
+  },
+  {
+    "id": "manager-create-court",
+    "area": "pistas",
+    "title": "El gestor crea una pista",
+    "user_visible_behavior": "El gestor añade una pista con nombre (p. ej. 'Pista 1') y aparece como operativa en el listado de pistas.",
+    "depends_on": ["bootstrap-postgres-migrations"],
+    "status": "not_started",
+    "verification": [
+      "Test: crear pista la persiste con estado operativa.",
+      "Test: nombre duplicado se rechaza."
+    ],
+    "evidence": [],
+    "notes": "Entidad Pista (nombre, estado operativa | cerrada). El club tiene 4 pistas; el piloto usa solo la Pista 1."
+  },
+  {
+    "id": "manager-close-court",
+    "area": "pistas",
+    "title": "El gestor cierra o reabre una pista",
+    "user_visible_behavior": "El gestor cambia el estado de una pista entre operativa y cerrada, y el listado lo refleja.",
+    "depends_on": ["manager-create-court"],
+    "status": "not_started",
+    "verification": [
+      "Test: cambiar estado de la pista persiste el valor."
+    ],
+    "evidence": [],
+    "notes": "Las franjas de pistas cerradas no se pueden reservar (ver availability-marks-unavailable-slots). Definir en la spec qué pasa con reservas futuras existentes al cerrar."
+  },
+  {
+    "id": "manager-configure-schedule",
+    "area": "horario",
+    "title": "El gestor configura el horario de apertura del club",
+    "user_visible_behavior": "El gestor define hora de apertura y cierre y el sistema muestra las franjas de 90 minutos resultantes para un día.",
+    "depends_on": ["manager-create-court"],
+    "status": "not_started",
+    "verification": [
+      "Test: un horario de 09:00 a 22:30 genera franjas de 90 min que empiezan a 09:00, 10:30, … y no exceden el cierre.",
+      "Test: un horario inválido (cierre antes de apertura) se rechaza."
+    ],
+    "evidence": [],
+    "notes": "Franja = pista + fecha + hora de inicio, 90 min. Decidir en la spec si el horario es único o por día de la semana, y la zona horaria (Europe/Madrid)."
+  },
+  {
+    "id": "manager-block-slots",
+    "area": "horario",
+    "title": "El gestor bloquea una pista por mantenimiento",
+    "user_visible_behavior": "El gestor crea un bloqueo con pista, rango de fechas y motivo, y aparece en el listado de bloqueos.",
+    "depends_on": ["manager-configure-schedule"],
+    "status": "not_started",
+    "verification": [
+      "Test: crear bloqueo válido lo persiste.",
+      "Test: rango con fin anterior al inicio se rechaza."
+    ],
+    "evidence": [],
+    "notes": "Entidad Bloqueo (pista, rango de fechas, motivo). Definir en la spec qué ocurre con reservas confirmadas dentro del rango."
+  },
+  {
+    "id": "member-week-availability",
+    "area": "reservas",
+    "title": "El socio ve la disponibilidad de la semana",
+    "user_visible_behavior": "Con sesión iniciada, el socio ve en el móvil una vista de 7 días con las franjas de cada pista marcadas como libres u ocupadas.",
+    "depends_on": ["auth-consume-magic-link", "manager-configure-schedule"],
+    "status": "not_started",
+    "verification": [
+      "Test: la consulta de disponibilidad devuelve las franjas de la semana con su estado.",
+      "Comprobación manual o e2e a ancho de móvil (375 px) sin scroll horizontal."
+    ],
+    "evidence": [],
+    "notes": "Mobile-first: la mayoría de socios usa el móvil. Objetivo: reservar en menos de 1 minuto."
+  },
+  {
+    "id": "availability-marks-unavailable-slots",
+    "area": "reservas",
+    "title": "La disponibilidad muestra como no reservables las franjas bloqueadas o de pistas cerradas",
+    "user_visible_behavior": "Las franjas dentro de un bloqueo o de una pista cerrada aparecen como no disponibles en la vista semanal.",
+    "depends_on": ["member-week-availability", "manager-block-slots", "manager-close-court"],
+    "status": "not_started",
+    "verification": [
+      "Test: una franja dentro de un bloqueo aparece como no disponible.",
+      "Test: todas las franjas de una pista cerrada aparecen como no disponibles."
+    ],
+    "evidence": [],
+    "notes": "Solo presentación; el rechazo en servidor está en booking-rejects-unavailable-slot."
+  },
+  {
+    "id": "member-book-slot",
+    "area": "reservas",
+    "title": "El socio reserva una franja libre",
+    "user_visible_behavior": "El socio pulsa una franja libre, confirma y la reserva queda confirmada; la franja pasa a ocupada para todos.",
+    "depends_on": ["member-week-availability"],
+    "status": "not_started",
+    "verification": [
+      "Test: reservar una franja libre crea una Reserva confirmada.",
+      "Test: reservar una franja ya ocupada devuelve error."
+    ],
+    "evidence": [],
+    "notes": "Entidad Reserva (socio, franja, estado). Las reglas adicionales se añaden en features separadas."
+  },
+  {
+    "id": "booking-concurrency-guard",
+    "area": "reservas",
+    "title": "Dos reservas simultáneas de la misma franja no generan doble reserva",
+    "user_visible_behavior": "Si dos socios reservan la misma franja a la vez, solo uno obtiene la reserva y el otro recibe un error claro.",
+    "depends_on": ["member-book-slot"],
+    "status": "not_started",
+    "verification": [
+      "Test de integración contra PostgreSQL: N intentos concurrentes sobre la misma franja producen exactamente una reserva confirmada."
+    ],
+    "evidence": [],
+    "notes": "Criterio de éxito del piloto: cero dobles reservas. Resolver en base de datos (p. ej. índice único parcial sobre franja con estado confirmada), no solo en código."
+  },
+  {
+    "id": "booking-requires-active-fee",
+    "area": "reservas",
+    "title": "Un socio sin cuota activa no puede reservar",
+    "user_visible_behavior": "Un socio con la cuota inactiva ve un mensaje explicando que no puede reservar y la reserva no se crea.",
+    "depends_on": ["member-book-slot", "manager-toggle-member-fee"],
+    "status": "not_started",
+    "verification": [
+      "Test: la acción de reservar de un socio sin cuota activa se rechaza en servidor."
+    ],
+    "evidence": [],
+    "notes": "Regla de docs/domain-model.md."
+  },
+  {
+    "id": "booking-max-two-future",
+    "area": "reservas",
+    "title": "Un socio no puede tener más de 2 reservas futuras confirmadas",
+    "user_visible_behavior": "Al intentar una tercera reserva futura, el socio ve un mensaje de límite alcanzado y la reserva no se crea.",
+    "depends_on": ["member-book-slot"],
+    "status": "not_started",
+    "verification": [
+      "Test: con 2 reservas futuras confirmadas, la tercera se rechaza.",
+      "Test: las reservas canceladas o pasadas no cuentan para el límite."
+    ],
+    "evidence": [],
+    "notes": "Considerar concurrencia del propio socio (dos pestañas)."
+  },
+  {
+    "id": "booking-rejects-unavailable-slot",
+    "area": "reservas",
+    "title": "No se puede reservar una franja bloqueada o de una pista cerrada",
+    "user_visible_behavior": "Un intento de reservar una franja bloqueada o de una pista cerrada se rechaza con un mensaje claro.",
+    "depends_on": ["member-book-slot", "manager-block-slots", "manager-close-court"],
+    "status": "not_started",
+    "verification": [
+      "Test: reservar una franja dentro de un bloqueo se rechaza en servidor.",
+      "Test: reservar en una pista cerrada se rechaza en servidor."
+    ],
+    "evidence": [],
+    "notes": "Complementa availability-marks-unavailable-slots, que solo cubre la vista."
+  },
+  {
+    "id": "member-my-bookings",
+    "area": "reservas",
+    "title": "El socio ve sus reservas futuras",
+    "user_visible_behavior": "El socio ve un listado de sus reservas confirmadas futuras con pista, fecha y hora.",
+    "depends_on": ["member-book-slot"],
+    "status": "not_started",
+    "verification": [
+      "Test: el listado devuelve solo reservas confirmadas futuras del socio con sesión, nunca de otros socios."
+    ],
+    "evidence": [],
+    "notes": ""
+  },
+  {
+    "id": "member-cancel-booking",
+    "area": "reservas",
+    "title": "El socio cancela una reserva con al menos 24 h de antelación",
+    "user_visible_behavior": "Desde 'mis reservas', el socio cancela una reserva que empieza en 24 h o más; la reserva pasa a cancelada y la franja aparece libre al instante.",
+    "depends_on": ["member-my-bookings"],
+    "status": "not_started",
+    "verification": [
+      "Test: cancelar con ≥24 h cambia el estado a cancelada y la franja vuelve a estar disponible.",
+      "Test: un socio no puede cancelar reservas de otro socio."
+    ],
+    "evidence": [],
+    "notes": "Objetivo: las cancelaciones liberan la franja al instante."
+  },
+  {
+    "id": "member-cancel-deadline",
+    "area": "reservas",
+    "title": "El socio no puede cancelar con menos de 24 h",
+    "user_visible_behavior": "Para reservas que empiezan en menos de 24 h, el socio no ve la opción de cancelar y el servidor rechaza el intento.",
+    "depends_on": ["member-cancel-booking"],
+    "status": "not_started",
+    "verification": [
+      "Test: cancelar a menos de 24 h se rechaza en servidor.",
+      "Test del límite exacto de 24 h con reloj controlado."
+    ],
+    "evidence": [],
+    "notes": "Usar zona horaria del club de forma consistente."
+  },
+  {
+    "id": "manager-day-bookings",
+    "area": "gestion-reservas",
+    "title": "El gestor ve las reservas de un día",
+    "user_visible_behavior": "El gestor elige una fecha y ve todas las reservas de ese día por pista, con socio y estado.",
+    "depends_on": ["member-book-slot", "auth-manager-route-guard"],
+    "status": "not_started",
+    "verification": [
+      "Test: la consulta por fecha devuelve las reservas de ese día con socio y estado."
+    ],
+    "evidence": [],
+    "notes": "Pensado para escritorio."
+  },
+  {
+    "id": "manager-cancel-booking",
+    "area": "gestion-reservas",
+    "title": "El gestor cancela cualquier reserva",
+    "user_visible_behavior": "El gestor cancela una reserva confirmada, incluso con menos de 24 h, y la franja queda libre.",
+    "depends_on": ["manager-day-bookings"],
+    "status": "not_started",
+    "verification": [
+      "Test: el gestor cancela una reserva a menos de 24 h y el estado pasa a cancelada.",
+      "Test: un socio no puede usar la acción de cancelación del gestor."
+    ],
+    "evidence": [],
+    "notes": "Ciclo de vida: confirmada → cancelada (gestor)."
+  },
+  {
+    "id": "manager-mark-no-show",
+    "area": "gestion-reservas",
+    "title": "El gestor marca una reserva como no presentada",
+    "user_visible_behavior": "Tras la hora de la franja, el gestor marca una reserva confirmada como no presentada; antes de la franja la acción no está disponible.",
+    "depends_on": ["manager-day-bookings"],
+    "status": "not_started",
+    "verification": [
+      "Test: marcar no presentada después de la franja cambia el estado.",
+      "Test: marcar no presentada antes de la franja se rechaza."
+    ],
+    "evidence": [],
+    "notes": "Ciclo de vida: confirmada → no presentada (gestor, después de la franja)."
+  }
+]

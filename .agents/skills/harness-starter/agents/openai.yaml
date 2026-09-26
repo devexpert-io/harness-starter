@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Starter"
+  short_description: "Create the minimal repo harness"
+  default_prompt: "Use $harness-starter to prepare the initial harness for this repository."

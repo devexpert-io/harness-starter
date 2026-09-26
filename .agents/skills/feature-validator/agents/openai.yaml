@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Validator"
+  short_description: "Validate one implemented feature independently."
+  default_prompt: "Use $feature-validator to validate the implemented feature."
