@@ -118,6 +118,10 @@ For `init.sh`, be explicit:
 - `./init.sh` must not start long-running processes such as `pnpm dev`.
 - It may print manual follow-up commands after the non-blocking checks pass.
 
+Code quality commands to run (from the `Code Quality` section of `AGENTS.md`):
+
+- <lint / format check / type check / tests, or `none for now` as recorded>
+
 ## Evidence To Capture
 
 - <Command output, screenshot, test name, log line, or manual result to record in `feature_list.json` or `PROGRESS.md`.>
@@ -129,5 +133,6 @@ For `init.sh`, be explicit:
 - [ ] Verification evidence is present.
 - [ ] Persistent E2E coverage was added/updated when the feature has an observable user/API flow and an E2E harness exists, or the spec explains why it is not needed.
 - [ ] `feature_list.json` and `PROGRESS.md` were updated correctly.
+- [ ] Code quality commands defined in `AGENTS.md` ran and passed.
 - [ ] No unrelated product behavior or extra feature work was added.
 ```

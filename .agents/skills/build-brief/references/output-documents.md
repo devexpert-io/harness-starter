@@ -35,6 +35,16 @@ Only add optional files when the user, domain, or quality gate shows that one fi
 
 ## Success Criteria
 
+## Code Quality Baseline
+
+Keep this section here only when `docs/technical-discovery.md` does not exist; otherwise record it there.
+
+- Lint:
+- Format check:
+- Type check:
+- Tests:
+- Enforced by:
+
 ## Notes
 ```
 
@@ -125,6 +135,14 @@ Use `Preferred Term` instead. Reason: ...
 ## Deployment and Operations
 
 ## Testing and Verification
+
+## Code Quality Baseline
+
+- Lint: `<command or tool>` / `none for now: <reason>`
+- Format check: `<command or tool>` / `none for now: <reason>`
+- Type check: `<command or tool>` / `not applicable` / `none for now: <reason>`
+- Tests: `<command or runner>` / `none for now: <reason>`
+- Enforced by: `init.sh` (always), plus pre-commit or CI if decided
 
 ## Observability
 

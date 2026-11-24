@@ -3,11 +3,11 @@
     "id": "bootstrap-nextjs-app",
     "area": "plataforma",
     "title": "La app Next.js arranca y pasa la verificación base",
-    "user_visible_behavior": "Al ejecutar ./init.sh se instalan dependencias, pasan lint, typecheck y un test de ejemplo, y la app sirve una página inicial en local.",
+    "user_visible_behavior": "Al ejecutar ./init.sh se instalan dependencias, pasan lint, comprobación de formato, typecheck y un test de ejemplo, y la app sirve una página inicial en local.",
     "depends_on": [],
     "status": "not_started",
     "verification": [
-      "./init.sh termina con código 0 ejecutando instalación, lint, typecheck y tests.",
+      "./init.sh termina con código 0 ejecutando instalación, lint, comprobación de formato, typecheck y tests (la línea base de calidad de docs/build-brief.md).",
       "RUN_START_COMMAND=1 ./init.sh sirve la página inicial en el navegador."
     ],
     "evidence": [],

@@ -29,5 +29,12 @@ Piloto de 2 semanas con 30 socios y la Pista 1.
 ## Criterios de éxito
 Ninguna doble reserva en el piloto; el 80% de las reservas del piloto se hacen en la web.
 
+## Línea base de calidad de código
+- Lint: ESLint (`pnpm lint`).
+- Formato: Prettier en modo comprobación (`pnpm format:check`).
+- Tipado: TypeScript estricto (`pnpm typecheck`).
+- Tests: Vitest (`pnpm test`).
+- Se aplica en: `./init.sh` siempre. CI más adelante, cuando haya hosting.
+
 ## Notas
 Stack propuesto: Next.js + PostgreSQL. Aún sin decidir hosting.

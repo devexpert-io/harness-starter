@@ -43,6 +43,15 @@ Before writing code:
 - Do not silently change verification rules during implementation.
 - Update durable repo artifacts instead of relying on chat summaries.
 
+## Code Quality
+
+Every feature must pass these checks. `./init.sh` runs them.
+
+- Lint: `[command | planned: command | none for now: reason]`
+- Format check: `[command | planned: command | none for now: reason]`
+- Type check: `[command | planned: command | not applicable | none for now: reason]`
+- Tests: `[command | planned: command | none for now: reason]`
+
 ## Required Artifacts
 
 - `feature_list.json`: source of truth for feature state.
@@ -84,6 +93,7 @@ echo "Harness status: pre-bootstrap"
 echo "Application stack is not initialized yet."
 echo "Next step: choose the first feature from feature_list.json and perform technical bootstrap."
 echo "Expected future commands should be recorded here after bootstrap."
+echo "Planned code quality checks: see the Code Quality section in AGENTS.md."
 ```
 
 ### Bootstrapped variant
@@ -93,6 +103,7 @@ echo "Expected future commands should be recorded here after bootstrap."
 set -euo pipefail
 
 INSTALL_CMD="[replace]"
+# VERIFY_CMD runs the Code Quality commands from AGENTS.md (lint, format check, type check, tests) plus build when relevant.
 VERIFY_CMD="[replace]"
 START_CMD="[replace]"
 
@@ -183,6 +194,7 @@ Rules:
 - Features should be vertical slices where possible, not isolated chores.
 - Each feature should be plausible to complete and verify in one focused agent session.
 - Split broad epics into smaller behavior slices before writing the feature list.
+- The bootstrap feature also installs the code quality tooling from the baseline. If the app is already runnable and that tooling is missing, add a dedicated setup feature and make the remaining features depend on it.
 - Bootstrap can be a feature only when the repo has no runnable app yet; if it is broad, split it into session-sized bootstrap slices.
 - A non-trivial MVP with auth, roles, data/content, workflows, and integrations should usually produce roughly 12-30 session-sized features. Fewer than 10 items is a warning sign, not a success metric.
 - Split feature titles containing "and", "/", commas, or multiple domains unless the combined behavior is truly verified by one small scenario.

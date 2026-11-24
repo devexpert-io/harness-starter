@@ -32,6 +32,15 @@ Antes de escribir código:
 - Las reglas de negocio de `docs/domain-model.md` (una reserva confirmada por franja, cuota activa, máximo 2 reservas futuras, cancelación ≥24 h) se hacen cumplir en servidor/base de datos, no solo en la interfaz.
 - Actualizar los artefactos del repo en lugar de depender de resúmenes del chat.
 
+## Calidad de código
+
+Toda feature debe pasar estas comprobaciones, que ejecuta `./init.sh`. Hasta que se complete `bootstrap-nextjs-app` son comandos previstos, no instalados.
+
+- Lint: previsto `pnpm lint`
+- Formato: previsto `pnpm format:check`
+- Tipado: previsto `pnpm typecheck`
+- Tests: previsto `pnpm test`
+
 ## Artefactos obligatorios
 
 - `feature_list.json`: fuente de verdad del estado de las features.

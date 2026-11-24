@@ -10,7 +10,7 @@ echo "Siguiente paso: implementar la feature 'bootstrap-nextjs-app' de feature_l
 echo "Tras el bootstrap, sustituir este script por la variante real con:"
 echo "  - instalación de dependencias"
 echo "  - arranque/migración de PostgreSQL"
-echo "  - verificación base (lint, typecheck, tests)"
+echo "  - verificación base (lint, formato, typecheck, tests: ver Calidad de código en AGENTS.md)"
 echo "  - comando de arranque de la app"
 
 if command -v python3 >/dev/null 2>&1; then

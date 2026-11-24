@@ -13,6 +13,7 @@ Status convention:
 | --- | --- | --- | --- |
 | Correctness | Does the implementation match the feature spec? | Acceptance scenarios pass or have strong evidence. | Behavior missing, fake, or materially different from the spec. |
 | Verification | Did required checks actually run with evidence? | Exact commands/results are recorded and rerunnable where possible. | No evidence, failed checks hidden, or only verbal confidence. |
+| Code quality | Did the repo's defined lint, format, type, and test commands run and pass? | Every command in the `Code Quality` section of `AGENTS.md` ran with recorded results, or is marked `none for now` / `not applicable` with a reason. | A defined command did not run or failed, or the repo has code but no code quality baseline and no recorded decision. |
 | E2E coverage | For observable user/API flows, did persistent E2E coverage exist and get updated when available? | `pnpm test:e2e` or repo-equivalent coverage exercises the changed flow, or the spec justifies why it is not needed. | Only manual smoke evidence remains after an E2E harness exists and the changed flow is E2E-testable. |
 | Scope discipline | Did implementation stay inside the selected feature? | No unrelated feature work or broad refactors. | Adjacent features implemented opportunistically. |
 | Architecture | Does code respect documented boundaries and patterns? | Dependencies and layers match `ARCHITECTURE.md`/repo patterns. | New ad hoc architecture, boundary violations, tangled coupling. |
@@ -27,7 +28,7 @@ After the repo has a runnable baseline, `init.sh` is expected to execute the non
 
 Acceptable:
 
-- runs lint/typecheck/tests/build or the repo-equivalent non-blocking checks,
+- runs the code quality commands defined in `AGENTS.md` plus tests/build, or the repo-equivalent non-blocking checks,
 - exits non-zero when those checks fail,
 - prints manual commands such as `pnpm dev` only after checks pass.
 

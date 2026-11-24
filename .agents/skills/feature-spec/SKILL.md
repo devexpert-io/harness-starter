@@ -61,6 +61,7 @@ Investigate how to implement the selected feature in this specific repo:
 - relevant API boundaries,
 - relevant auth/permission patterns,
 - verification commands available today,
+- code quality commands defined in `AGENTS.md`, which every feature must run,
 - persistent E2E commands available today, such as `pnpm test:e2e`, when the feature has user-facing or API-flow behavior,
 - gaps caused by pre-bootstrap or missing infrastructure.
 

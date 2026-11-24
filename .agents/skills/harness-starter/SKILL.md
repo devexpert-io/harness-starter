@@ -84,6 +84,16 @@ If the app is not bootstrapped yet, `init.sh` should be honest and provisional:
 
 Do not invent working commands that do not exist.
 
+### 4b. Carry The Code Quality Baseline
+
+Read the code quality baseline from the discovery docs and carry it into the harness without installing anything:
+
+- Write the lint, format check, type check, and test commands in the `Code Quality` section of `AGENTS.md`. Mark them as planned while the tooling is not installed yet.
+- When the repo is pre-bootstrap, the bootstrap feature also installs and configures that tooling and wires it into `init.sh`. Its `verification` must run those commands.
+- When the repo already has a runnable app but the baseline tooling is missing, add a dedicated feature to set it up and make the remaining unfinished features depend on it.
+- When the baseline says `none for now`, record that decision and its reason in `AGENTS.md`.
+- When the discovery docs have no baseline at all, tell the user it is a gap and suggest running the `build-brief` quality gate. Do not pick tools yourself.
+
 ### 5. Quality Check
 
 Before finishing, verify:
@@ -96,6 +106,8 @@ Before finishing, verify:
 - For non-trivial MVPs, the feature count is not suspiciously low. If there are fewer than 10 features, run a second slicing pass before finishing.
 - `PROGRESS.md` names the standard startup and verification paths, even if provisional.
 - `init.sh` is executable or tell the user to run `chmod +x init.sh` if tooling prevented changing mode.
+- `AGENTS.md` has a `Code Quality` section with commands, planned commands, or an explicit `none for now` with its reason.
+- If quality tooling is planned but not installed, a feature in `feature_list.json` installs it and `init.sh` will run it.
 - No extra files were created.
 
 ## Explaining The Result

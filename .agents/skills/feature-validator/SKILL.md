@@ -72,6 +72,8 @@ Check:
 
 ### 3. Rerun Or Inspect Verification
 
+Run the code quality commands defined in `AGENTS.md`. If a defined command was not run or fails, the verdict is `revise`. If the repo has application code but neither a code quality baseline nor a recorded `none for now` decision, raise a `revise` finding that points at the gap.
+
 Run the repo standard gate and focused checks when practical. If checks are expensive, unavailable, or require external services, inspect recorded evidence and state what was not rerun.
 
 If `init.sh` exists after a runnable baseline has been created, treat it as the standard non-blocking startup/verification gate. It should execute the relevant checks and fail on errors. If it only prints commands while the repo is already bootstrapped, raise a `revise` finding with a concrete repair brief. It must not start long-running processes such as a dev server.

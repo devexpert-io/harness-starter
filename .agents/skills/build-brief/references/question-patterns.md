@@ -55,6 +55,14 @@ Ask one question at a time. Include a recommended answer when helpful. Prefer sc
 - What runtime events, logs, or audit records would help debug failures?
 - Who operates the system on day one, and what mistakes should the system prevent?
 
+## Code Quality
+
+- Which linter and formatter fit this stack? Offer common defaults as suggestions only, for example Ruff for Python, ESLint with Prettier or Biome for JavaScript/TypeScript, ktlint or detekt for Kotlin, SwiftLint or swift-format for Swift, gofmt with go vet for Go, rustfmt with clippy for Rust.
+- Does the language support static type checking, and should it be enforced (for example `tsc --noEmit`, mypy, or pyright)?
+- Which test runner will the project use?
+- Where must these checks run: always in `init.sh`, and optionally in pre-commit hooks or CI?
+- Is it acceptable to skip any of them for now? If yes, record why and when to revisit.
+
 ## MVP and Slicing
 
 - What is the smallest vertical slice that proves the core value?

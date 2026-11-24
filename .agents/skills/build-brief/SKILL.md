@@ -123,6 +123,7 @@ Do not assume the project is web. Ask about the required surface and constraints
 - deployment and hosting,
 - privacy/security/compliance,
 - testability and observability,
+- code quality baseline: how linting, formatting, type checking (when the language supports it), and tests will run, and where they are enforced (`init.sh`, pre-commit, CI). Tool names are suggestions that depend on the stack, never requirements. `none for now` is a valid answer only when it is recorded with a reason,
 - budget/time/operational constraints.
 
 Read `references/question-patterns.md` for phase-specific questions.
@@ -182,6 +183,7 @@ Run this step when discovery is about to close, or when the user explicitly asks
 - Move resolved questions out of open questions.
 - Mark remaining questions as `Blocking next phase`, `Implementation-time`, or `Later`.
 - Do not leave critical sections as only `Not yet defined`; write a minimal initial position or explain why it is safely deferred.
+- Check that the code quality baseline has a stance: commands or tools for linting, formatting, type checking, and tests, or an explicit `none for now` with a reason. Record it in `docs/technical-discovery.md` when that file exists, otherwise in `docs/build-brief.md`. Do not leave it implicit: downstream skills only enforce what is written.
 - Check that access revocation/expiry, verification/testing, observability, operational ownership, and MVP validation have at least a minimal stance.
 - For visual products/features, check that design assets were either referenced or `DESIGN.md` was created with enough direction for future UI implementation. If generated images were used, verify that project-bound concept images are saved under `docs/design/concepts/`, referenced from `DESIGN.md`, and clearly marked as directional rather than exact UI source.
 - Keep each document concise enough to be reread by an agent; if a document grows large, summarize decisions and move details to later planning docs only when the user asks.
@@ -199,6 +201,7 @@ Stop discovery when there is enough information to answer:
 - If visual UI exists: what visual direction or design source should agents follow?
 - If generated design concepts exist: which images are accepted as inspiration, and what prompt or constraint produced them?
 - What is explicitly out of scope?
+- Which code quality checks will gate every feature, or why none yet?
 - What remains unknown?
 
 Then ask the user whether to proceed to the next phase, usually the `harness-starter` skill to derive `AGENTS.md`, `init.sh`, `PROGRESS.md`, and `feature_list.json`. Do not proceed automatically.
